@@ -1,0 +1,6 @@
+python-docx
+markdown-it-py
+requests
+mdit-py-plugins
+latex2mathml
+mathml2omml
