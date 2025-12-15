@@ -4,6 +4,7 @@
 
 ## 功能特性
 
+- **模版支持**：支持使用现有的 `.docx` 文件作为模版，自动继承其样式（标题、正文等）。
 - **中文字体优化**：默认使用 "Microsoft YaHei" (微软雅黑)，解决生成文档中中文字体显示问题。
 - **数学公式支持**：支持 LaTeX 格式的行内公式 ($...$) 和块级公式 ($$...$$)。
 - **图片嵌入**：支持本地图片和网络图片（自动下载并嵌入）。
@@ -31,7 +32,7 @@ pip install -e .
 
 ### 命令行工具 (CLI)
 
-安装后，您可以直接在终端使用 `md2docx` 命令：
+安装后，您可以直接在终端使用 `md2docx` 命令（或 `python -m md2docx.cli`）：
 
 ```bash
 md2docx <输入文件.md> <输出文件.docx> [选项]
@@ -44,12 +45,17 @@ md2docx <输入文件.md> <输出文件.docx> [选项]
    md2docx input.md output.docx
    ```
 
-2. **指定字体** (例如使用宋体)：
+2. **使用模版** (推荐，继承模版样式)：
+   ```bash
+   md2docx input.md output.docx --template template.docx
+   ```
+
+3. **指定字体** (覆盖模版默认字体或在无模版时指定)：
    ```bash
    md2docx input.md output.docx --font "SimSun"
    ```
 
-3. **保留换行符** (将 Markdown 中的单次换行转换为文档中的换行)：
+4. **保留换行符** (将 Markdown 中的单次换行转换为文档中的换行)：
    ```bash
    md2docx input.md output.docx --preserve-breaks
    ```
@@ -66,9 +72,10 @@ with open("input.md", "r", encoding="utf-8") as f:
     md_content = f.read()
 
 # 初始化转换器
-# font_name: 指定使用的字体，默认为 "Microsoft YaHei"
+# template_path: 模版文件路径 (可选)
+# font_name: 指定使用的字体 (覆盖模版字体，或无模版时的默认字体)
 # preserve_breaks: 是否保留单次换行，默认为 False
-converter = MarkdownToDocx(font_name="Microsoft YaHei", preserve_breaks=True)
+converter = MarkdownToDocx(template_path="template.docx", preserve_breaks=True)
 
 # 执行转换
 converter.convert(md_content, "output.docx")

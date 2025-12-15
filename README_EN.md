@@ -4,6 +4,7 @@
 
 ## Features
 
+- **Template Support**: Use an existing `.docx` file as a template to inherit styles (headings, normal text, etc.).
 - **CJK Font Optimization**: Defaults to "Microsoft YaHei" to ensure proper rendering of Chinese characters in Word documents.
 - **Math Support**: Renders LaTeX-style inline math ($...$) and block equations ($$...$$).
 - **Image Embedding**: Supports both local and remote images (automatically downloaded and embedded).
@@ -31,7 +32,7 @@ pip install -e .
 
 ### Command Line Interface (CLI)
 
-After installation, use the `md2docx` command in your terminal:
+After installation, use the `md2docx` command in your terminal (or `python -m md2docx.cli`):
 
 ```bash
 md2docx <input_file.md> <output_file.docx> [options]
@@ -44,12 +45,17 @@ md2docx <input_file.md> <output_file.docx> [options]
    md2docx input.md output.docx
    ```
 
-2. **Specify Font** (e.g., using Arial):
+2. **Use Template** (Recommended):
+   ```bash
+   md2docx input.md output.docx --template template.docx
+   ```
+
+3. **Specify Font** (Overrides template font or defaults if no template):
    ```bash
    md2docx input.md output.docx --font "Arial"
    ```
 
-3. **Preserve Line Breaks** (treat single newlines in Markdown as line breaks in Docx):
+4. **Preserve Line Breaks** (treat single newlines in Markdown as line breaks in Docx):
    ```bash
    md2docx input.md output.docx --preserve-breaks
    ```
@@ -66,9 +72,10 @@ with open("input.md", "r", encoding="utf-8") as f:
     md_content = f.read()
 
 # Initialize converter
-# font_name: Specify the font family (default: "Microsoft YaHei")
+# template_path: Path to template docx (optional)
+# font_name: Specify the font family (overrides template or defaults)
 # preserve_breaks: Whether to preserve single line breaks (default: False)
-converter = MarkdownToDocx(font_name="Microsoft YaHei", preserve_breaks=True)
+converter = MarkdownToDocx(template_path="template.docx", preserve_breaks=True)
 
 # Convert
 converter.convert(md_content, "output.docx")
