@@ -12,19 +12,26 @@ import mathml2omml
 from lxml import etree
 
 class MarkdownToDocx:
-    def __init__(self, font_name="Microsoft YaHei", preserve_breaks=False):
+    def __init__(self, template_path=None, font_name="Microsoft YaHei", preserve_breaks=False):
         self.font_name = font_name
         self.preserve_breaks = preserve_breaks
         # Enable tables and math
         self.md = MarkdownIt('commonmark').enable('table').use(texmath_plugin)
-        self.doc = Document()
         
-        style = self.doc.styles['Normal']
-        style.font.name = self.font_name
-        style.font.size = Pt(11)
-        style._element.rPr.rFonts.set(qn('w:eastAsia'), self.font_name)
+        if template_path:
+            self.doc = Document(template_path)
+        else:
+            self.doc = Document()
+        
+        if self.font_name:
+            style = self.doc.styles['Normal']
+            style.font.name = self.font_name
+            style.font.size = Pt(11)
+            style._element.rPr.rFonts.set(qn('w:eastAsia'), self.font_name)
 
     def _apply_font(self, run):
+        if not self.font_name:
+            return
         run.font.name = self.font_name
         # This is critical for CJK fonts to show up correctly in Word
         run._element.rPr.rFonts.set(qn('w:eastAsia'), self.font_name)
