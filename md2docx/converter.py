@@ -221,7 +221,7 @@ class MarkdownToDocx:
                 # Code inline usually doesn't need CJK font fix unless it has CJK, 
                 # but good to apply fallback if needed. Courier New might support it or not.
             
-            elif child.type == 'math_inline':
+            elif child.type == 'math_inline' or child.type == 'math_single':
                 self._add_math(paragraph, child.content)
             
             elif child.type == 'image':
@@ -245,6 +245,11 @@ class MarkdownToDocx:
                 pass
 
     def _add_math(self, paragraph, latex_content):
+        # Strip potential surrounding delimiters that might have been included
+        latex_content = latex_content.strip()
+        if latex_content.startswith('$') and latex_content.endswith('$'):
+            latex_content = latex_content[1:-1]
+
         try:
             mathml = latex2mathml.converter.convert(latex_content)
             omml_string = mathml2omml.convert(mathml)
