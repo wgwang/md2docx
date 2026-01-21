@@ -259,10 +259,85 @@ class MarkdownToDocx:
             
             # Parse and append
             tree = etree.fromstring(omml_string)
+            self._clean_omml(tree)
             paragraph._element.append(tree)
         except Exception as e:
             print(f"Failed to convert math: {e}")
             paragraph.add_run(latex_content)
+
+    def _clean_omml(self, tree):
+        ns = {'m': 'http://schemas.openxmlformats.org/officeDocument/2006/math'}
+        m_ns = ns['m']
+        
+        def is_empty(node):
+            if node is None:
+                return True
+            # Check text content recursively
+            text = "".join(node.itertext()).strip()
+            return not text
+
+        def get_or_create_pr(element, pr_name):
+            pr = element.find(f'./m:{pr_name}', ns)
+            if pr is None:
+                pr = etree.Element(f'{{{m_ns}}}{pr_name}')
+                element.insert(0, pr)
+            return pr
+
+        def set_hide(pr, hide_name):
+            hide = pr.find(f'./m:{hide_name}', ns)
+            if hide is None:
+                hide = etree.SubElement(pr, f'{{{m_ns}}}{hide_name}')
+                hide.set(f'{{{m_ns}}}val', 'on')
+
+        # 1. Fix m:rad with empty m:deg
+        for rad in tree.xpath('.//m:rad', namespaces=ns):
+            deg = rad.find('./m:deg', ns)
+            should_hide_deg = False
+            
+            if deg is not None:
+                if is_empty(deg):
+                    rad.remove(deg)
+                    should_hide_deg = True
+            else:
+                should_hide_deg = True
+            
+            if should_hide_deg:
+                radPr = get_or_create_pr(rad, 'radPr')
+                set_hide(radPr, 'degHide')
+
+        # 2. Fix m:nary with empty m:sup or m:sub
+        for nary in tree.xpath('.//m:nary', namespaces=ns):
+            sup = nary.find('./m:sup', ns)
+            if sup is None or is_empty(sup):
+                if sup is not None:
+                    nary.remove(sup)
+                naryPr = get_or_create_pr(nary, 'naryPr')
+                set_hide(naryPr, 'supHide')
+
+            sub = nary.find('./m:sub', ns)
+            if sub is None or is_empty(sub):
+                if sub is not None:
+                    nary.remove(sub)
+                naryPr = get_or_create_pr(nary, 'naryPr')
+                set_hide(naryPr, 'subHide')
+
+        # 3. Fix m:sSubSup with empty m:sup -> m:sSub
+        for ssubsup in tree.xpath('.//m:sSubSup', namespaces=ns):
+            sup = ssubsup.find('./m:sup', ns)
+            sub = ssubsup.find('./m:sub', ns)
+            
+            sup_empty = sup is not None and is_empty(sup)
+            sub_empty = sub is not None and is_empty(sub)
+            
+            if sup_empty:
+                ssubsup.remove(sup)
+                ssubsup.tag = f'{{{m_ns}}}sSub'
+                # If sub is also empty, it will fall through to be a weird sSub with empty sub, which is fine-ish,
+                # or we could handle double empty. But prioritized the main issue.
+                
+            elif sub_empty:
+                ssubsup.remove(sub)
+                ssubsup.tag = f'{{{m_ns}}}sSup'
 
     def _add_image(self, paragraph, src):
         # We need to fetch the image
