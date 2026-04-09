@@ -19,11 +19,11 @@ long_description = f"{readme_en}\n\n---\n\n{readme_zh}"
 
 setup(
     name="md2docx-pro",
-    version="0.1.3",  # Bump version for stable CI release
+    version="0.1.4",  # First version
     description="A Python package to convert Markdown to Docx with custom font and embedded images.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Gemini Assistant",
+    author="wgwang",
     url="https://github.com/wgwang/md2docx",
     packages=find_packages(),
     install_requires=[

@@ -79,7 +79,7 @@ docx_bytes = converter.convert_to_bytes(md_content)
 
 ## AI Agent 集成
 
-本项目包含一个 `md2docx-skill` 目录，符合 Gemini CLI 等 AI 框架的 Skill 规范。AI Agent 可以通过该 Skill 快速了解如何调用 `md2docx` 生成文档。
+本项目包含一个 `md2docx-skill` 目录，符合 OpenClaw 等 AI 框架的 Skill 规范。AI Agent 可以通过该 Skill 快速了解如何调用 `md2docx` 生成文档。
 
 ## 许可证
 

@@ -73,7 +73,7 @@ docx_bytes = converter.convert_to_bytes(md_content)
 
 ## AI Agent Integration
 
-This repository includes a `md2docx-skill` directory following the Gemini CLI skill standard. AI agents can use this skill to quickly learn how to leverage `md2docx` for document generation.
+This repository includes a `md2docx-skill` directory following the OpenClaw CLI skill standard. AI agents can use this skill to quickly learn how to leverage `md2docx` for document generation.
 
 ## License
 
