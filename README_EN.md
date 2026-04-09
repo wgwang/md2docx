@@ -1,7 +1,7 @@
 # md2docx
 
 [![Python Tests](https://github.com/yourusername/md2docx/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/md2docx/actions/workflows/test.yml)
-[![PyPI version](https://badge.fury.io/py/md2docx.svg)](https://badge.fury.io/py/md2docx)
+[![PyPI version](https://badge.fury.io/py/md2docx-pro.svg)](https://badge.fury.io/py/md2docx-pro)
 
 `md2docx` is a Python tool designed to convert Markdown files into elegantly formatted Docx documents. It features support for custom fonts, mathematical equations, tables, and embedded images, with specific optimizations for CJK (Chinese, Japanese, Korean) font support.
 
@@ -19,7 +19,7 @@
 ### Via PyPI (Recommended)
 
 ```bash
-pip install md2docx
+pip install md2docx-pro
 ```
 
 ### From Source

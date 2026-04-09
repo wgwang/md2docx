@@ -1,7 +1,7 @@
 # md2docx
 
 [![Python Tests](https://github.com/yourusername/md2docx/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/md2docx/actions/workflows/test.yml)
-[![PyPI version](https://badge.fury.io/py/md2docx.svg)](https://badge.fury.io/py/md2docx)
+[![PyPI version](https://badge.fury.io/py/md2docx-pro.svg)](https://badge.fury.io/py/md2docx-pro)
 
 `md2docx` 是一个 Python 工具，用于将 Markdown 文件转换为美观的 Docx 文档。它支持自定义字体、数学公式、表格、图片嵌入等功能，特别针对中文字体支持进行了优化。
 
@@ -20,7 +20,7 @@
 ### 通过 PyPI 安装 (推荐)
 
 ```bash
-pip install md2docx
+pip install md2docx-pro
 ```
 
 ### 从源码安装
