@@ -19,7 +19,7 @@ long_description = f"{readme_en}\n\n---\n\n{readme_zh}"
 
 setup(
     name="md2docx-pro",
-    version="0.1.2",  # Bump version to fix build error
+    version="0.1.3",  # Bump version for stable CI release
     description="A Python package to convert Markdown to Docx with custom font and embedded images.",
     long_description=long_description,
     long_description_content_type="text/markdown",
