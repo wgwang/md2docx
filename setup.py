@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="md2docx",
+    name="md2docx-pro",
     version="0.1.0",
     description="A Python package to convert Markdown to Docx with custom font and embedded images.",
     author="Gemini Assistant",

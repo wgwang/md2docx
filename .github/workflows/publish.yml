@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/md2docx
+      url: https://pypi.org/p/md2docx-pro
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
