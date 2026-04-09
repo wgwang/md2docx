@@ -7,6 +7,7 @@ from docx.oxml.ns import qn
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from markdown_it import MarkdownIt
 from mdit_py_plugins.texmath import texmath_plugin
+import re
 import latex2mathml.converter
 import mathml2omml
 from lxml import etree
@@ -253,6 +254,13 @@ class MarkdownToDocx:
         try:
             mathml = latex2mathml.converter.convert(latex_content)
             omml_string = mathml2omml.convert(mathml)
+            
+            # Workaround for mathml2omml bug: groupChrPr and groupChr mismatch and missing prefix
+            # 1. Add prefixes to tags that are missing it
+            omml_string = re.sub(r'<(/?)(?!m:)(\w+)', r'<\1m:\2', omml_string)
+            # 2. Fix the mismatch where groupChrPr is incorrectly closed by </m:groupChr>
+            omml_string = omml_string.replace('</m:groupChr><m:e>', '</m:groupChrPr><m:e>')
+
             # Add namespace if missing
             if 'xmlns:m=' not in omml_string:
                 omml_string = omml_string.replace('<m:oMath>', '<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">', 1)
