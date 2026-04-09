@@ -1,18 +1,27 @@
 # md2docx
 
+[![Python Tests](https://github.com/yourusername/md2docx/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/md2docx/actions/workflows/test.yml)
+[![PyPI version](https://badge.fury.io/py/md2docx.svg)](https://badge.fury.io/py/md2docx)
+
 `md2docx` 是一个 Python 工具，用于将 Markdown 文件转换为美观的 Docx 文档。它支持自定义字体、数学公式、表格、图片嵌入等功能，特别针对中文字体支持进行了优化。
 
 ## 功能特性
 
-- **模版支持**：支持使用现有的 `.docx` 文件作为模版，自动继承其样式（标题、正文等）。
-- **中文字体优化**：默认使用 "Microsoft YaHei" (微软雅黑)，解决生成文档中中文字体显示问题。
-- **数学公式支持**：支持 LaTeX 格式的行内公式 ($...$) 和块级公式 ($$...$$)。
+- **多风格模版支持**：内置多种专业风格模版（专业、学术、创意），支持使用现有 `.docx` 作为模版继承样式。
+- **中文字体优化**：默认使用 "Microsoft YaHei" (微软雅黑) 或 "SimSun" (宋体)，解决生成文档中中文字体显示问题。
+- **数学公式支持**：支持 LaTeX 格式的行内公式 ($...$) 和块级公式 ($$...$$)，完美转换为 Word 原生公式。
 - **图片嵌入**：支持本地图片和网络图片（自动下载并嵌入）。
 - **表格支持**：支持标准 Markdown 表格语法。
-- **代码高亮**：支持代码块和行内代码样式。
-- **换行控制**：提供选项保留 Markdown 中的硬换行。
+- **Agent 友好**：提供 `convert_to_bytes` 接口，支持在内存中生成文档流，适配 AI Agent 和 Web API。
+- **Agent Skill**：提供符合标准规范的 Skill 封装，方便 OpenClaw 等 AI 框架直接调用。
 
 ## 安装
+
+### 通过 PyPI 安装 (推荐)
+
+```bash
+pip install md2docx
+```
 
 ### 从源码安装
 
@@ -22,17 +31,9 @@ cd md2docx
 pip install .
 ```
 
-或者使用开发者模式（推荐，便于调试）：
-
-```bash
-pip install -e .
-```
-
 ## 使用方法
 
 ### 命令行工具 (CLI)
-
-安装后，您可以直接在终端使用 `md2docx` 命令（或 `python -m md2docx.cli`）：
 
 ```bash
 md2docx <输入文件.md> <输出文件.docx> [选项]
@@ -45,56 +46,40 @@ md2docx <输入文件.md> <输出文件.docx> [选项]
    md2docx input.md output.docx
    ```
 
-2. **使用模版** (推荐，继承模版样式)：
+2. **使用内置专业模版**：
    ```bash
-   md2docx input.md output.docx --template template.docx
+   md2docx input.md output.docx --template professional_template.docx
    ```
 
-3. **指定字体** (覆盖模版默认字体或在无模版时指定)：
+3. **指定字体**：
    ```bash
    md2docx input.md output.docx --font "SimSun"
    ```
 
-4. **保留换行符** (将 Markdown 中的单次换行转换为文档中的换行)：
-   ```bash
-   md2docx input.md output.docx --preserve-breaks
-   ```
-
 ### Python SDK
-
-您也可以在 Python 代码中作为库使用：
 
 ```python
 from md2docx import MarkdownToDocx
 
-# 读取 Markdown 内容
-with open("input.md", "r", encoding="utf-8") as f:
-    md_content = f.read()
+md_content = "# Hello World"
+converter = MarkdownToDocx(template_path="professional_template.docx")
 
-# 初始化转换器
-# template_path: 模版文件路径 (可选)
-# font_name: 指定使用的字体 (覆盖模版字体，或无模版时的默认字体)
-# preserve_breaks: 是否保留单次换行，默认为 False
-converter = MarkdownToDocx(template_path="template.docx", preserve_breaks=True)
-
-# 执行转换
+# 1. 转换为本地文件
 converter.convert(md_content, "output.docx")
+
+# 2. 转换为内存流 (适用于 AI Agent)
+docx_bytes = converter.convert_to_bytes(md_content)
 ```
 
-## 目录结构说明
+## 内置模版
 
-```text
-md2docx/
-├── md2docx/            # 源代码目录
-│   ├── __init__.py
-│   ├── cli.py          # 命令行入口
-│   └── converter.py    # 转换核心逻辑
-├── examples/           # 示例文件
-├── tests/              # 测试用例
-├── setup.py            # 安装脚本
-├── requirements.txt    # 依赖列表
-└── README.md           # 说明文档
-```
+- `professional_template.docx`: 商务专业风格，现代无衬线字体 (Arial + 微软雅黑)。
+- `academic_template.docx`: 严谨学术风格，衬线字体 (Times New Roman + 宋体)，1.5 倍行距。
+- `creative_template.docx`: 活泼创意风格，橙色/蓝色主题，适合演示文档。
+
+## AI Agent 集成
+
+本项目包含一个 `md2docx-skill` 目录，符合 Gemini CLI 等 AI 框架的 Skill 规范。AI Agent 可以通过该 Skill 快速了解如何调用 `md2docx` 生成文档。
 
 ## 许可证
 

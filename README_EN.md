@@ -1,18 +1,26 @@
 # md2docx
 
+[![Python Tests](https://github.com/yourusername/md2docx/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/md2docx/actions/workflows/test.yml)
+[![PyPI version](https://badge.fury.io/py/md2docx.svg)](https://badge.fury.io/py/md2docx)
+
 `md2docx` is a Python tool designed to convert Markdown files into elegantly formatted Docx documents. It features support for custom fonts, mathematical equations, tables, and embedded images, with specific optimizations for CJK (Chinese, Japanese, Korean) font support.
 
 ## Features
 
-- **Template Support**: Use an existing `.docx` file as a template to inherit styles (headings, normal text, etc.).
-- **CJK Font Optimization**: Defaults to "Microsoft YaHei" to ensure proper rendering of Chinese characters in Word documents.
-- **Math Support**: Renders LaTeX-style inline math ($...$) and block equations ($$...$$).
+- **Multi-Style Templates**: Built-in professional, academic, and creative templates. Supports custom `.docx` templates to inherit styles.
+- **CJK Font Optimization**: Defaults to "Microsoft YaHei" or "SimSun" to ensure proper rendering of Chinese characters in Word documents.
+- **Math Support**: Renders LaTeX-style inline math ($...$) and block equations ($$...$$) into native Word equations.
 - **Image Embedding**: Supports both local and remote images (automatically downloaded and embedded).
-- **Tables**: Supports standard Markdown table syntax.
-- **Code Styling**: clear styling for code blocks and inline code.
-- **Line Break Control**: Option to preserve soft line breaks from Markdown as hard breaks in the document.
+- **Agent Friendly**: Provides `convert_to_bytes` API for in-memory document generation, perfect for AI Agents and Web APIs.
+- **Agent Skill**: Includes a standard-compliant Skill package for seamless integration with AI frameworks like OpenClaw.
 
 ## Installation
+
+### Via PyPI (Recommended)
+
+```bash
+pip install md2docx
+```
 
 ### From Source
 
@@ -22,17 +30,9 @@ cd md2docx
 pip install .
 ```
 
-Or for development:
-
-```bash
-pip install -e .
-```
-
 ## Usage
 
 ### Command Line Interface (CLI)
-
-After installation, use the `md2docx` command in your terminal (or `python -m md2docx.cli`):
 
 ```bash
 md2docx <input_file.md> <output_file.docx> [options]
@@ -45,56 +45,35 @@ md2docx <input_file.md> <output_file.docx> [options]
    md2docx input.md output.docx
    ```
 
-2. **Use Template** (Recommended):
+2. **Use Professional Template**:
    ```bash
-   md2docx input.md output.docx --template template.docx
-   ```
-
-3. **Specify Font** (Overrides template font or defaults if no template):
-   ```bash
-   md2docx input.md output.docx --font "Arial"
-   ```
-
-4. **Preserve Line Breaks** (treat single newlines in Markdown as line breaks in Docx):
-   ```bash
-   md2docx input.md output.docx --preserve-breaks
+   md2docx input.md output.docx --template professional_template.docx
    ```
 
 ### Python SDK
 
-You can also use it as a library in your Python scripts:
-
 ```python
 from md2docx import MarkdownToDocx
 
-# Read Markdown content
-with open("input.md", "r", encoding="utf-8") as f:
-    md_content = f.read()
+md_content = "# Hello World"
+converter = MarkdownToDocx(template_path="professional_template.docx")
 
-# Initialize converter
-# template_path: Path to template docx (optional)
-# font_name: Specify the font family (overrides template or defaults)
-# preserve_breaks: Whether to preserve single line breaks (default: False)
-converter = MarkdownToDocx(template_path="template.docx", preserve_breaks=True)
-
-# Convert
+# 1. Convert to local file
 converter.convert(md_content, "output.docx")
+
+# 2. Convert to in-memory byte stream (ideal for Agents)
+docx_bytes = converter.convert_to_bytes(md_content)
 ```
 
-## Project Structure
+## Built-in Templates
 
-```text
-md2docx/
-├── md2docx/            # Source code
-│   ├── __init__.py
-│   ├── cli.py          # CLI entry point
-│   └── converter.py    # Core conversion logic
-├── examples/           # Example files
-├── tests/              # Unit tests
-├── setup.py            # Installation script
-├── requirements.txt    # Dependencies
-└── README.md           # Documentation
-```
+- `professional_template.docx`: Business professional style, modern sans-serif (Arial + YaHei).
+- `academic_template.docx`: Rigorous academic style, serif fonts (Times New Roman + SimSun), 1.5 line spacing.
+- `creative_template.docx`: Vibrant creative style, colorful themes (Orange/Blue).
+
+## AI Agent Integration
+
+This repository includes a `md2docx-skill` directory following the Gemini CLI skill standard. AI agents can use this skill to quickly learn how to leverage `md2docx` for document generation.
 
 ## License
 

@@ -44,6 +44,15 @@ class MarkdownToDocx:
         self._process_tokens(tokens)
         self.doc.save(output_path)
 
+    def convert_to_bytes(self, md_content):
+        """Convert markdown to docx and return as a BytesIO object."""
+        tokens = self.md.parse(md_content)
+        self._process_tokens(tokens)
+        target_stream = io.BytesIO()
+        self.doc.save(target_stream)
+        target_stream.seek(0)
+        return target_stream
+
     def _process_tokens(self, tokens):
         # We'll use a stack for styles/context
         # contexts: 'root', 'list_bullet', 'list_ordered', 'blockquote'
